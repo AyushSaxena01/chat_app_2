@@ -39,31 +39,30 @@ function emoji(input) {
 }
 
 function help(Input){
-if(Input=='/help'){
+
   document.getElementById('modal').style.display = 'flex';
   input.value='';
 }
-}
+
 
 function random(Input){
-  if(Input=='/random'){
+  
     let num = parseInt(Math.random()*100);
     let newElement=document.createElement("li")
     newElement.textContent='Your random number is : '+num;
     chatMessages.appendChild(newElement);
     input.value='';
   }
-  }
 
   function clear(Input){
-    if(Input=='/clear'){
+    
 
       while(chatMessages.firstChild){
         chatMessages.removeChild(chatMessages.firstChild);
       };
       input.value='';
     }
-  }
+  
 
 ok.addEventListener('click',()=>{
   document.getElementById('modal').style.display = 'none';
@@ -102,11 +101,17 @@ socket.on("user joined", (user) => {
 
 document.getElementById("form").addEventListener("submit", (e) => {
   e.preventDefault();
-  help(input.value);
-  random(input.value);
-  clear(input.value);
-  // const input = document.getElementById("input");
-  if (input.value && username) {
+  if(input.value=='/random'){
+    random();
+  }
+  else if(input.value=='/help'){
+  help();
+}
+else if(input.value=='/clear'){
+  clear()
+}
+  
+ else if (input.value && username) {
     // socket.emit('chat message', { message: input.value });
     socket.emit("chat message", { message: emoji(input.value) });
     input.value = "";
