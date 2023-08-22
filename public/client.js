@@ -4,6 +4,10 @@ const usernameInput = document.getElementById("username");
 const joinButton = document.getElementById("join-button");
 const contactList = document.getElementById("contact-list");
 const chatMessages = document.getElementById("messages");
+const send = document.querySelector('.send-button');
+const input = document.getElementById('input');
+const ok = document.getElementById('ok');
+
 
 let username = "";
 
@@ -34,6 +38,46 @@ function emoji(input) {
   return text;
 }
 
+function help(Input){
+if(Input=='/help'){
+  document.getElementById('modal').style.display = 'flex';
+  input.value='';
+}
+}
+
+function random(Input){
+  if(Input=='/random'){
+    let num = parseInt(Math.random()*100);
+    let newElement=document.createElement("li")
+    newElement.textContent='Your random number is : '+num;
+    chatMessages.appendChild(newElement);
+    input.value='';
+  }
+  }
+
+  function clear(Input){
+    if(Input=='/clear'){
+
+      while(chatMessages.firstChild){
+        chatMessages.removeChild(chatMessages.firstChild);
+      };
+      input.value='';
+    }
+  }
+
+ok.addEventListener('click',()=>{
+  document.getElementById('modal').style.display = 'none';
+})
+
+send.addEventListener("click",()=>{
+  if (usernameInput.value ==''){
+    alert("Enter name first!");
+  }
+  else if(input.value ==''){
+    alert("Enter text!");
+  }
+  });
+
 joinButton.addEventListener("click", () => {
   const enteredUsername = usernameInput.value.trim();
   if (enteredUsername !== "") {
@@ -44,6 +88,12 @@ joinButton.addEventListener("click", () => {
   }
 });
 
+joinButton.addEventListener("click",()=>{
+if (usernameInput.value ==''){
+  alert("Enter name first!");
+}
+});
+
 socket.on("user joined", (user) => {
   const li = document.createElement("li");
   li.textContent = user;
@@ -52,7 +102,10 @@ socket.on("user joined", (user) => {
 
 document.getElementById("form").addEventListener("submit", (e) => {
   e.preventDefault();
-  const input = document.getElementById("input");
+  help(input.value);
+  random(input.value);
+  clear(input.value);
+  // const input = document.getElementById("input");
   if (input.value && username) {
     // socket.emit('chat message', { message: input.value });
     socket.emit("chat message", { message: emoji(input.value) });

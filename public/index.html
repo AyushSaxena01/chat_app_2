@@ -8,10 +8,12 @@
 </head>
 <body>
     <form id='form'action="">
+      <div class="userinfo">
       <div class="user-name-input">
         <input id="username" class="input-box" placeholder="Enter your name" autocomplete="off" />
         <button id="join-button">Join Chat</button>
       </div>
+    </div>
 
   <div class="app-container"> 
     <div class="contacts-column">
@@ -28,6 +30,20 @@
     </div>
   </div>
 </form>
+<div id = 'modal' class="modal">
+  <div class="modal-content">
+    <ul id="message">
+      <li><h3>Available Commands:</h3></li> 
+      <li>/help - Shows this message</li> 
+      <li>/random - Prints a random number</li>
+      <li>/clear - Clears the chat</li>
+      <div id="button">
+        <button id="ok">Ok</button>
+      </div>
+    </ul>
+    
+  </div>
+</div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
 </body>
