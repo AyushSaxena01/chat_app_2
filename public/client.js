@@ -4,10 +4,10 @@ const usernameInput = document.getElementById("username");
 const joinButton = document.getElementById("join-button");
 const contactList = document.getElementById("contact-list");
 const chatMessages = document.getElementById("messages");
-const send = document.querySelector('.send-button');
-const input = document.getElementById('input');
-const ok = document.getElementById('ok');
-
+const send = document.querySelector(".send-button");
+const input = document.getElementById("input");
+const ok = document.getElementById("ok");
+const join = document.getElementById("join-button");
 
 let username = "";
 
@@ -24,8 +24,7 @@ function emoji(input) {
   let inputWords = input.split(" ");
   // console.log(inputWords);
   let convertedWords = inputWords.map((word) => {
-    
-    // return emoji[word.toLowerCase()] || word 
+    // return emoji[word.toLowerCase()] || word
 
     if (emoji[word.toLowerCase()]) {
       return emoji[word.toLowerCase()];
@@ -38,44 +37,49 @@ function emoji(input) {
   return text;
 }
 
-function help(Input){
-
-  document.getElementById('modal').style.display = 'flex';
-  input.value='';
+function help(Input) {
+  document.getElementById("modal").style.display = "flex";
+  send.disabled= true;
+  input.value = "";
 }
 
+function random(Input) {
+  let num = parseInt(Math.random() * 100);
+  let newElement = document.createElement("li");
+  newElement.textContent = "Your random number is : " + num;
+  chatMessages.appendChild(newElement);
+  input.value = "";
+}
 
-function random(Input){
-  
-    let num = parseInt(Math.random()*100);
-    let newElement=document.createElement("li")
-    newElement.textContent='Your random number is : '+num;
-    chatMessages.appendChild(newElement);
-    input.value='';
+function clear(Input) {
+  while (chatMessages.firstChild) {
+    chatMessages.removeChild(chatMessages.firstChild);
   }
+  input.value = "";
+}
 
-  function clear(Input){
+ok.addEventListener("click", () => {
+  document.getElementById("modal").style.display = "none";
+  send.disabled=false;
+});
+
+send.addEventListener("click", () => {
+
+  if (usernameInput.value == "") {
     
-
-      while(chatMessages.firstChild){
-        chatMessages.removeChild(chatMessages.firstChild);
-      };
-      input.value='';
-    }
-  
-
-ok.addEventListener('click',()=>{
-  document.getElementById('modal').style.display = 'none';
-})
-
-send.addEventListener("click",()=>{
-  if (usernameInput.value ==''){
     alert("Enter name first!");
-  }
-  else if(input.value ==''){
+  } else if (input.value == "") {
+    
     alert("Enter text!");
   }
-  });
+ 
+});
+
+usernameInput.addEventListener('keydown',(e)=>{
+  if(e.key === 'Enter'){
+    join.click();
+  }
+})
 
 joinButton.addEventListener("click", () => {
   const enteredUsername = usernameInput.value.trim();
@@ -87,10 +91,10 @@ joinButton.addEventListener("click", () => {
   }
 });
 
-joinButton.addEventListener("click",()=>{
-if (usernameInput.value ==''){
-  alert("Enter name first!");
-}
+joinButton.addEventListener("click", () => {
+  if (usernameInput.value == "") {
+    alert("Enter name first!");
+  }
 });
 
 socket.on("user joined", (user) => {
@@ -101,17 +105,13 @@ socket.on("user joined", (user) => {
 
 document.getElementById("form").addEventListener("submit", (e) => {
   e.preventDefault();
-  if(input.value=='/random'){
+  if (input.value == "/random") {
     random();
-  }
-  else if(input.value=='/help'){
-  help();
-}
-else if(input.value=='/clear'){
-  clear()
-}
-  
- else if (input.value && username) {
+  } else if (input.value == "/help") {
+    help();
+  } else if (input.value == "/clear") {
+    clear();
+  } else if (input.value && username) {
     // socket.emit('chat message', { message: input.value });
     socket.emit("chat message", { message: emoji(input.value) });
     input.value = "";
